@@ -1,23 +1,39 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-export default class Filter extends Component {
+import {connect} from 'react-redux';
+class Filter extends Component {
+    getTextStyle(statusName) {
+        const { myFilterStatus } = this.props;
+        if (statusName === myFilterStatus) return { color: 'yellow', fontWeight: 'bold' };
+        return styles.buttonText;
+    }
+    setFilterStatus(actionType) {
+        this.props.dispatch({ type: actionType });
+    }
 
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity >
-                    <Text>SHOW ALL</Text>
+                <TouchableOpacity onPress={() => this.setFilterStatus('FILTER_SHOW_ALL')}>
+                    <Text style={this.getTextStyle('SHOW_ALL')}>SHOW ALL</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <Text>MEMORIZED</Text>
+                <TouchableOpacity  onPress={() => this.setFilterStatus('FILTER_MEMORIZED')}>
+                    <Text style={this.getTextStyle('MEMORIZED')}>MEMORIZED</Text>
                 </TouchableOpacity>
-                <TouchableOpacity >
-                    <Text>NEED PRACTICE</Text>
+                <TouchableOpacity  onPress={() => this.setFilterStatus('FILTER_NEED_PRACTICE')}>
+                    <Text style={this.getTextStyle('NEED_PRACTICE')}>NEED PRACTICE</Text>
                 </TouchableOpacity>
             </View>
         );
     }
 }
+function mapStoreToProps(state){
+    return{
+
+        myFilterStatus: state.filterStatus,
+    };
+}
+export default connect(mapStoreToProps)(Filter)
 
 const styles = StyleSheet.create({
     container: { 

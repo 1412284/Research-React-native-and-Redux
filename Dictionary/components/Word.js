@@ -2,30 +2,40 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
-export default class Word extends Component {
+class Word extends Component {
+    setActionButton(actionType) {
+        this.props.dispatch({ type:actionType,id:this.props.myWord.id});
+    }
     render() {
-        const { en, vn } = this.props.myWord;
+        const { en, vn,memorized, isShow,id} = this.props.myWord;
+        const textDecorationLine = memorized ? 'line-through' : 'none';
+        const memorizedButtonText = memorized ? 'forget' : 'memorized';
+        const meaning = isShow? vn : '------';
+        const showButtonText = isShow? 'Hide' : 'Show';
+
         return (
             <View style={styles.container}>
-                <Text >{en}</Text>
-                <Text>{vn}</Text>
+                <Text style={{ textDecorationLine }}>{en}</Text>
+                <Text>{meaning}</Text>
                 <View style={styles.controller}>
                     <TouchableOpacity
-                        style={styles.button}
+                        style={styles.button} 
+                        onPress={() => this.setActionButton('TOGGLE_MEMORIZED')}
                     >
-                        <Text>memorized</Text>
+                        <Text>{memorizedButtonText}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.button}
+                        onPress={() => this.setActionButton('TOGGLE_SHOW')}
                     >
-                        <Text>show</Text>
+                        <Text>{showButtonText}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         );
     }
 }
-
+export default connect()(Word);
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#D2DEF6',
